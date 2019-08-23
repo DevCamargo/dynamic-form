@@ -41,11 +41,11 @@ let form = {
       label: "Gender:",
       type: "select",
       options: [{
-        value: 0,
+        value: "Male",
         label: "Male"
       },
       {
-        value: 1,
+        value: "Female",
         label: "Female"
       }]
     },
@@ -55,7 +55,7 @@ let form = {
         "Do you have a non-immigrant visa to the U.S. currently?",
       type: "radio",
       options: [{
-        value: 1,
+        value: "Yes",
         label: "Yes",
         fields: [{
           _id: "type",
@@ -72,7 +72,7 @@ let form = {
         }]
       },
       {
-        value: 0,
+        value: "No",
         label: "No"
       }]
     }]
@@ -85,22 +85,22 @@ let form = {
       label: "Term you expect to enter <INSTITUTION NAME>",
       type: "checkbox",
       options: [{
-        value: 0,
+        value: "Summer",
         label: "Summer (May through August)"
       },
       {
-        value: 1,
+        value: "Fall",
         label: "Fall (August through December)",
         fields: [{
           _id: "season",
           label: "Season:",
           type: "select",
           options: [{
-            value: 0,
+            value: "August through September",
             label: "August through September"
           },
           {
-            value: 1,
+            value: "October through December",
             label: "October through December"
           }]
         }]
@@ -108,18 +108,18 @@ let form = {
     },
     {
       _id: "course",
-      label: "Type of course",
+      label: "Type of course:",
       type: "checkbox",
       options: [{
-        value: 0,
+        value: "Intensive English",
         label: "Intensive English"
       },
       {
-        value: 1,
+        value: "Undergraduate Student",
         label: "Undergraduate Student"
       },
       {
-        value: 2,
+        value: "Graduate Student",
         label: "Graduate Student",
         fields: [{
           _id: "certified",
@@ -142,7 +142,7 @@ let form = {
       label: "Will you be accompanied by your spouse?",
       type: "question",
       options: [{
-        value: 1,
+        value: "Yes",
         label: "Yes",
         fields: [{
           _id: "name",
@@ -157,21 +157,21 @@ let form = {
           label: "Type of course",
           type: "checkbox",
           options: [{
-            value: 0,
+            value: "Intensive English",
             label: "Intensive English"
           },
           {
-            value: 1,
+            value: "Undergraduate Student",
             label: "Undergraduate Student"
           },
           {
-            value: 2,
+            value: "Graduate Student",
             label: "Graduate Student"
           }]
         }]
       },
       {
-        value: 0,
+        value: "No",
         label: "No"
       }]
     }]
@@ -277,10 +277,10 @@ let application = {
         },
         gender: {
           _id: 4,
-          value: 0
+          value: "Male"
         }, visa: {
           _id: 5,
-          value: 1,
+          value: "Yes",
           data: {
             type: {
               _id: 6,
@@ -296,22 +296,22 @@ let application = {
         term: {
           _id: 7,
           value: [{
-            value: 0
+            value: "Summer"
           }, {
-            value: 1,
+            value: "Fall",
             data: {
               season: {
                 _id: 8,
-                value: 1
+                value: "October through December"
               }
             }
           }]
         }, course: {
           _id: 9,
           value: [{
-            value: 0
+            value: "Intensive English"
           }, {
-            value: 2,
+            value: "Graduate Student",
             data: {
               certified: {
                 _id: 10,
@@ -324,7 +324,7 @@ let application = {
           value: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
         }, dependentForm: {
           _id: 12,
-          value: 1,
+          value: "Yes",
           data: {
             name: {
               _id: 13,
@@ -332,9 +332,9 @@ let application = {
             }, course: {
               _id: 14,
               value: [{
-                value: 0
+                value: "Intensive English"
               }, {
-                value: 2
+                value: "Undergraduate Student"
               }]
             }
           }
@@ -346,9 +346,6 @@ let application = {
 
 
 form.sections.forEach(section => {
-  // section.fields.forEach(field => {
-  //   console.log(`${field.label} ${s.fields[field._id].value}`)
-  // });
   console.log(`\n${section.label}`)
   section.fields.forEach(field => {
     viewFields(field, application.sections[section._id].fields)
@@ -356,49 +353,34 @@ form.sections.forEach(section => {
 });
 
 function viewFields(field, fieldsValue) {
-  // section.fields.forEach(field => {
-    if (Array.isArray(fieldsValue[field._id].value)) {
-      let values = []
-      // console.log("field:", )
+  if (Array.isArray(fieldsValue[field._id].value)) {
+    let values = []
+    fieldsValue[field._id].value.forEach(v => {
+      values.push(v.value)
+    })
+    console.log(`${field.label} ${values}`)
+    fieldsValue[field._id].value.forEach(v => {
       field.options.forEach(op => {
-        console.log(op)
-      })
-      fieldsValue[field._id].value.forEach(v => {
-        values.push(v.value)
-        if (v.data) {
-          console.log("value:", v.data)
-        }
-      });
-      console.log(`${field.label} ${values}`)
-    }
-    else {
-      console.log(`${field.label} ${fieldsValue[field._id].value}`)
-    }
-    if (fieldsValue[field._id].data) {
-      field.options.forEach(op => {
-        if (op.fields) {
-          op.fields.forEach(f => {
-            viewFields(f, fieldsValue[field._id].data)
-          });
+        if (v.value == op.value) {
+          if (op.fields) {
+            op.fields.forEach(f => {
+              viewFields(f, v.data)
+            });
+          }
         }
       })
-    }
-  // });
-}
-
-function viewArray(field, fieldsValue) {
-  if (field.options) {
-
+    });
   }
-  let values = []
-  console.log("field", field)
-  fieldsValue[field._id].value.forEach(v => {
-    values.push(v.value)
-    if (v.data) {
-      console.log("value", v)
-      f
-      viewOptions(field, v)
-    }
-  });
-  console.log(`${field.label} ${values}`)
+  else {
+    console.log(`${field.label} ${fieldsValue[field._id].value}`)
+  }
+  if (fieldsValue[field._id].data) {
+    field.options.forEach(op => {
+      if (op.fields) {
+        op.fields.forEach(f => {
+          viewFields(f, fieldsValue[field._id].data)
+        });
+      }
+    })
+  }
 }
