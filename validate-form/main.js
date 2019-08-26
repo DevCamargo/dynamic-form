@@ -119,8 +119,11 @@ let form = {
       fieldKey: 'learn',
       label: 'Please tell us how you first learned about San Diego State University:',
       type: 'textarea'
-    },
-    {
+    }]
+  }, {
+    label: 'DEPENDENT INFORMATION FORM',
+    sectionKey: 'dependent_information',
+    fields: [{
       fieldKey: 'dependentForm',
       label: 'Will you be accompanied by your spouse?',
       type: 'question',
@@ -212,7 +215,12 @@ let application = {
           }]
         }, learn: {
           value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua'
-        }, dependentForm: {
+        }
+      }
+    },
+    dependent_information: {
+      fields: {
+        dependentForm: {
           value: 'Yes',
           data: {
             name: {
