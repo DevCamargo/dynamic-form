@@ -6,6 +6,7 @@ let form = {
     label: "PERSONAL INFORMATION",
     fields: [{
       _id: "name",
+
       label: "Name:",
       type: "input",
       attributes: [{
@@ -348,23 +349,21 @@ let application = {
 form.sections.forEach(section => {
   console.log(`\n${section.label}`)
   section.fields.forEach(field => {
-    viewFields(field, application.sections[section._id].fields)
+    viewFields(field, application.sections[section._id].fields, "")
   });
 });
 
-function viewFields(field, fieldsValue) {
+function viewFields(field, fieldsValue, tab) {
   if (Array.isArray(fieldsValue[field._id].value)) {
-    let values = []
+    console.log(`${tab}${field.label}`)
     fieldsValue[field._id].value.forEach(v => {
-      values.push(v.value)
-    })
-    console.log(`${field.label} ${values}`)
-    fieldsValue[field._id].value.forEach(v => {
+      console.log(`\t${tab}${v.value}`)
       field.options.forEach(op => {
         if (v.value == op.value) {
           if (op.fields) {
+            // console.log(`-----> ${v.value}:`)
             op.fields.forEach(f => {
-              viewFields(f, v.data)
+              viewFields(f, v.data, tab + "\t\t")
             });
           }
         }
@@ -372,13 +371,13 @@ function viewFields(field, fieldsValue) {
     });
   }
   else {
-    console.log(`${field.label} ${fieldsValue[field._id].value}`)
+    console.log(`${tab}${field.label} ${fieldsValue[field._id].value}`)
   }
   if (fieldsValue[field._id].data) {
     field.options.forEach(op => {
       if (op.fields) {
         op.fields.forEach(f => {
-          viewFields(f, fieldsValue[field._id].data)
+          viewFields(f, fieldsValue[field._id].data, tab + "\t")
         });
       }
     })
