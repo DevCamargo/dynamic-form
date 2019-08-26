@@ -4,13 +4,11 @@
 
 <script>
 // @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
 import Form from "@/components/Form.vue";
 
 export default {
   name: "home",
   components: {
-    HelloWorld,
     Form
   },
   data() {
