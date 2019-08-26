@@ -7,36 +7,30 @@ let form = {
       fieldKey: 'name',
       label: 'Name:',
       type: 'input',
-    },
-    {
+    }, {
       fieldKey: 'city',
       label: 'City:',
       type: 'input',
-    },
-    {
+    }, {
       fieldKey: 'state',
       label: 'State:',
       type: 'input',
-    },
-    {
+    }, {
       fieldKey: 'zipCode',
       label: 'Zip code:',
       type: 'input',
-    },
-    {
+    }, {
       fieldKey: 'gender',
       label: 'Gender:',
       type: 'select',
       options: [{
         value: 'Male',
         label: 'Male'
-      },
-      {
+      }, {
         value: 'Female',
         label: 'Female'
       }]
-    },
-    {
+    }, {
       fieldKey: 'visa',
       label:
         'Do you have a non-immigrant visa to the U.S. currently?',
@@ -51,20 +45,17 @@ let form = {
           options: [{
             value: 'M-1',
             label: 'M-1'
-          },
-          {
+          }, {
             value: 'F-1',
             label: 'F-1'
           }]
         }]
-      },
-      {
+      }, {
         value: 'No',
         label: 'No'
       }]
     }]
-  },
-  {
+  }, {
     label: 'EDUCATIONAL INFORMATION',
     sectionKey: 'educational_information',
     fields: [{
@@ -74,8 +65,7 @@ let form = {
       options: [{
         value: 'Summer',
         label: 'Summer (May through August)'
-      },
-      {
+      }, {
         value: 'Fall',
         label: 'Fall (August through December)',
         fields: [{
@@ -85,27 +75,23 @@ let form = {
           options: [{
             value: 'August through September',
             label: 'August through September'
-          },
-          {
+          }, {
             value: 'October through December',
             label: 'October through December'
           }]
         }]
       }]
-    },
-    {
+    }, {
       fieldKey: 'course',
       label: 'Type of course:',
       type: 'checkbox',
       options: [{
         value: 'Intensive English',
         label: 'Intensive English'
-      },
-      {
+      }, {
         value: 'Undergraduate Student',
         label: 'Undergraduate Student'
-      },
-      {
+      }, {
         value: 'Graduate Student',
         label: 'Graduate Student',
         fields: [{
@@ -114,8 +100,7 @@ let form = {
           type: 'file'
         }]
       }]
-    },
-    {
+    }, {
       fieldKey: 'learn',
       label: 'Please tell us how you first learned about San Diego State University:',
       type: 'textarea'
@@ -134,26 +119,22 @@ let form = {
           fieldKey: 'name',
           label: 'Name:',
           type: 'input',
-        },
-        {
+        }, {
           fieldKey: 'course',
           label: 'Type of course',
           type: 'checkbox',
           options: [{
             value: 'Intensive English',
             label: 'Intensive English'
-          },
-          {
+          }, {
             value: 'Undergraduate Student',
             label: 'Undergraduate Student'
-          },
-          {
+          }, {
             value: 'Graduate Student',
             label: 'Graduate Student'
           }]
         }]
-      },
-      {
+      }, {
         value: 'No',
         label: 'No'
       }]
@@ -161,12 +142,50 @@ let form = {
   }]
 }
 
+let exempleForm = {
+  sections: [{
+    sectionKey: 'personal_information',
+    fields: [{
+      fieldKey: 'name',
+      label: 'Name:',
+      type: 'input',
+    }, {
+      fieldKey: 'gender',
+      label: 'Gender:',
+      type: 'select',
+      options: [{
+        value: 'male',
+        label: 'Male'
+      }, {
+        value: 'female',
+        label: 'Female'
+      }]
+    }]
+  }]
+}
+
+let exempleApplication = {
+  sections: {
+    personal_information: {
+      fields: {
+        name: {
+          value: 'Nicolas Cage'
+        },
+        gender: {
+          value: 'male'
+        }
+      }
+    }
+  }
+}
+
+
 let application = {
   sections: {
     personal_information: {
       fields: {
         name: {
-          value: 'André Camargo'
+          value: 'Nicolas Cage'
         },
         city: {
           value: 'Londrina'
@@ -175,7 +194,7 @@ let application = {
           value: 'Paraná'
         },
         zipCode: {
-          value: '86086480'
+          value: '86020400'
         },
         gender: {
           value: 'Male'
@@ -255,7 +274,6 @@ function viewFields(field, fieldsValue, tab) {
       field.options.forEach(op => {
         if (v.value == op.value) {
           if (op.fields) {
-            // console.log(`-----> ${v.value}:`)
             op.fields.forEach(f => {
               viewFields(f, v.data, tab + '\t\t')
             });
