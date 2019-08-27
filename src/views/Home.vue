@@ -15,79 +15,58 @@ export default {
     return {
       form: {
         label: "Application for San Diego State University",
-        id: 1,
         sections: [
           {
-            id: 1,
+            sectionKey: "personal_information",
             label: "PERSONAL INFORMATION",
             fields: [
               {
-                id: "name",
+                fieldKey: "name",
                 label: "Name:",
-                type: "input",
-                attributes: [
-                  {
-                    required: true
-                  }
-                ]
+                type: "input"
               },
               {
-                id: "city",
+                fieldKey: "city",
                 label: "City:",
-                type: "input",
-                attributes: [
-                  {
-                    required: true
-                  }
-                ]
+                type: "input"
               },
               {
-                id: "state",
+                fieldKey: "state",
                 label: "State:",
-                type: "input",
-                attributes: [
-                  {
-                    required: true
-                  }
-                ]
+                type: "input"
               },
               {
-                id: "zipCode",
+                fieldKey: "zipCode",
                 label: "Zip code:",
-                type: "input",
-                attributes: [
-                  {
-                    required: true
-                  }
-                ]
+                type: "input"
               },
               {
-                id: "gender",
+                fieldKey: "gender",
                 label: "Gender:",
                 type: "select",
                 options: [
                   {
-                    value: 0,
+                    value: "Male",
                     label: "Male"
                   },
                   {
-                    value: 1,
+                    value: "Female",
                     label: "Female"
                   }
                 ]
               },
               {
-                id: "visa",
+                fieldKey: "visa",
                 label:
                   "Do you have a non-immigrant visa to the U.S. currently?",
                 type: "radio",
                 options: [
                   {
-                    value: 1,
+                    value: "Yes",
                     label: "Yes",
                     fields: [
                       {
-                        id: "type",
+                        fieldKey: "type",
                         label: "Type:",
                         type: "select",
                         options: [
@@ -104,7 +83,7 @@ export default {
                     ]
                   },
                   {
-                    value: 0,
+                    value: "No",
                     label: "No"
                   }
                 ]
@@ -112,33 +91,33 @@ export default {
             ]
           },
           {
-            id: 2,
             label: "EDUCATIONAL INFORMATION",
+            sectionKey: "educational_information",
             fields: [
               {
-                id: "term",
+                fieldKey: "term",
                 label: "Term you expect to enter <INSTITUTION NAME>",
                 type: "checkbox",
                 options: [
                   {
-                    value: 0,
+                    value: "Summer",
                     label: "Summer (May through August)"
                   },
                   {
-                    value: 1,
+                    value: "Fall",
                     label: "Fall (August through December)",
                     fields: [
                       {
-                        id: "season",
+                        fieldKey: "season",
                         label: "Season:",
                         type: "select",
                         options: [
                           {
-                            value: 0,
+                            value: "August through September",
                             label: "August through September"
                           },
                           {
-                            value: 1,
+                            value: "October through December",
                             label: "October through December"
                           }
                         ]
@@ -148,77 +127,72 @@ export default {
                 ]
               },
               {
-                id: "course",
-                label: "Type of course",
+                fieldKey: "course",
+                label: "Type of course:",
                 type: "checkbox",
                 options: [
                   {
-                    value: 0,
+                    value: "Intensive English",
                     label: "Intensive English"
                   },
                   {
-                    value: 1,
+                    value: "Undergraduate Student",
                     label: "Undergraduate Student"
                   },
                   {
-                    value: 2,
+                    value: "Graduate Student",
                     label: "Graduate Student",
                     fields: [
                       {
-                        id: "certified",
+                        fieldKey: "certified",
                         label: "Attach Certified",
-                        type: "file",
-                        attributes: [
-                          {
-                            multiple: false,
-                            accept: "all"
-                          }
-                        ]
+                        type: "file"
                       }
                     ]
                   }
                 ]
               },
               {
-                id: "learn",
+                fieldKey: "learn",
                 label:
                   "Please tell us how you first learned about San Diego State University:",
                 type: "textarea"
-              },
+              }
+            ]
+          },
+          {
+            label: "DEPENDENT INFORMATION FORM",
+            sectionKey: "dependent_information",
+            fields: [
               {
-                id: "dependentForm",
+                fieldKey: "dependentForm",
                 label: "Will you be accompanied by your spouse?",
                 type: "question",
                 options: [
                   {
-                    value: 1,
+                    value: "Yes",
                     label: "Yes",
                     fields: [
                       {
-                        id: "name",
+                        fieldKey: "name",
                         label: "Name:",
-                        type: "input",
-                        attributes: [
-                          {
-                            required: true
-                          }
-                        ]
+                        type: "input"
                       },
                       {
-                        id: "course",
+                        fieldKey: "course",
                         label: "Type of course",
                         type: "checkbox",
                         options: [
                           {
-                            value: 0,
+                            value: "Intensive English",
                             label: "Intensive English"
                           },
                           {
-                            value: 1,
+                            value: "Undergraduate Student",
                             label: "Undergraduate Student"
                           },
                           {
-                            value: 3,
+                            value: "Graduate Student",
                             label: "Graduate Student"
                           }
                         ]
@@ -226,7 +200,7 @@ export default {
                     ]
                   },
                   {
-                    value: 0,
+                    value: "No",
                     label: "No"
                   }
                 ]
