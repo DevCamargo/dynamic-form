@@ -1,5 +1,5 @@
 <template>
-  <Form :form="form" />
+  <Form :form="form" @value="view" @send="send" />
 </template>
 
 <script>
@@ -11,8 +11,78 @@ export default {
   components: {
     Form
   },
+  created() {
+    this.startJson()
+  },
+  methods: {
+    send() {
+      // console.log(JSON.stringify(this.json));
+      this.form.sections.forEach(section => {
+        console.log(`\n${section.label}`)
+        section.fields.forEach(field => {
+          this.viewFields(field, this.json.sections[section.sectionKey].fields, '')
+        });
+      });
+    },
+    viewFields(field, fieldsValue, tab) {
+      if (Array.isArray(fieldsValue[field.fieldKey].value)) {
+        console.log(`${tab}${field.label}`)
+        fieldsValue[field.fieldKey].value.forEach(v => {
+          console.log(`\t${tab}${v.value}`)
+          field.options.forEach(op => {
+            if (v.value == op.value) {
+              if (op.fields) {
+                op.fields.forEach(f => {
+                  this.viewFields(f, v.data, tab + '\t\t')
+                });
+              }
+            }
+          })
+        });
+      }
+      else {
+        console.log(`${tab}${field.label} ${fieldsValue[field.fieldKey].value}`)
+      }
+      if (fieldsValue[field.fieldKey].data) {
+        field.options.forEach(op => {
+          if (op.fields) {
+            op.fields.forEach(f => {
+              this.viewFields(f, fieldsValue[field.fieldKey].data, tab + '\t')
+            });
+          }
+        })
+      }
+    },
+    view(value, field, section) {
+      // console.log(this.json, value);
+      this.json.sections[section].fields[field] = {
+        value: value[field].value
+      }
+      // if (this.json) {
+        
+      // }
+      // console.log(value, field, section);
+      // console.log(this.json);
+    },
+    startJson() {
+      this.json = {
+        sections: {}
+      }
+      this.form.sections.forEach(s => {
+        this.json.sections[s.sectionKey] = {
+          fields: {}
+        }
+        if (s.fields) {
+          s.fields.forEach(f => {
+            this.json.sections[s.sectionKey].fields[f.fieldKey] = {}
+          })
+        }
+      })
+    }
+  },
   data() {
     return {
+      json: {},
       form: {
         label: "Application for San Diego State University",
         sections: [
@@ -96,12 +166,29 @@ export default {
             fields: [
               {
                 fieldKey: "term",
-                label: "Term you expect to enter <INSTITUTION NAME>",
+                label: "Term you expect to enter San Diego State University",
                 type: "checkbox",
                 options: [
                   {
                     value: "Summer",
-                    label: "Summer (May through August)"
+                    label: "Summer (May through August)",
+                    fields: [
+                      {
+                        fieldKey: "season",
+                        label: "Season:",
+                        type: "select",
+                        options: [
+                          {
+                            value: "August through September",
+                            label: "August through September"
+                          },
+                          {
+                            value: "October through December",
+                            label: "October through December"
+                          }
+                        ]
+                      }
+                    ]
                   },
                   {
                     value: "Fall",
@@ -146,7 +233,10 @@ export default {
                       {
                         fieldKey: "certified",
                         label: "Attach Certified",
-                        type: "file"
+                        type: "file",
+                        attributes: {
+                          accept: '.pdf'
+                        }
                       }
                     ]
                   }

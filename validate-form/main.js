@@ -178,7 +178,7 @@ let exempleApplication = {
     }
   }
 }
-
+let applicationS = JSON.parse('{"sections":{"personal_information":{"fields":{"name":{"value":"André Camargo"},"city":{"value":"Londrina"},"state":{"value":"PR"},"zipCode":{"value":"86083480"},"gender":{"value":"Male"},"visa":{"value":"Yes"}}},"educational_information":{"fields":{"term":{"value":[{"value":"Summer","data":{"season":{"value":"October through December"}}},{"value":"Fall","data":{"season":{"value":"August through September"}}}]},"course":{"value":[{"value":"Intensive English"},{"value":"Undergraduate Student"}]},"learn":{"value":"Lalalalalalala"}}},"dependent_information":{"fields":{"dependentForm":{}}}}}')
 
 let application = {
   sections: {
@@ -262,7 +262,7 @@ let application = {
 form.sections.forEach(section => {
   console.log(`\n${section.label}`)
   section.fields.forEach(field => {
-    viewFields(field, application.sections[section.sectionKey].fields, '')
+    viewFields(field, applicationS.sections[section.sectionKey].fields, '')
   });
 });
 

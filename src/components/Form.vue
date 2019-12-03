@@ -3,8 +3,9 @@
     <div class="form-name">{{form.label}}</div>
     <div class="section" v-for="(section, index) in form.sections" :key="index">
       <div class="section-name">{{section.label}}</div>
-      <Field v-for="(field, index) in section.fields" :key="index" :field="field" @value="value" />
+      <Field v-for="(field, index) in section.fields" :key="index" :field="field" @value="v => value(v, field.fieldKey, section.sectionKey)" />
     </div>
+    <button @click="$emit('send')">Send info (view console)</button>
   </div>
 </template>
 <script>
@@ -19,8 +20,9 @@ export default {
     form: Object
   },
   methods: {
-    value(value) {
-      console.log(value);
+    value(value, field, section) {
+      this.$emit('value', value, field, section)
+      // console.log();
     }
   }
 };

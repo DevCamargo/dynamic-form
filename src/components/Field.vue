@@ -30,13 +30,13 @@
             v-model="value"
             :disabled="disabled"
             type="radio"
-            :ref="`${id}-${field.id}-${option.value}`"
-            :id="`${id}-${field.id}-${option.value}`"
-            :name="field.id"
+            :ref="`${id}-${field.fieldKey}-${option.value}`"
+            :id="`${id}-${field.fieldKey}-${option.value}`"
+            :name="field.fieldKey"
             :value="option.value"
             @change="select()"
           />
-          <label :for="`${id}-${field.id}-${option.value}`">{{option.label}}</label>
+          <label :for="`${id}-${field.fieldKey}-${option.value}`">{{option.label}}</label>
           <div v-if="option.fields">
             <Field
               v-for="(theField, index) in option.fields"
@@ -44,7 +44,6 @@
               :field="theField"
               :disabled="value != option.value"
               @value="concat"
-              @addValue="addValue"
             />
           </div>
         </div>
@@ -55,21 +54,21 @@
             v-model="value"
             :disabled="disabled"
             type="checkbox"
-            :ref="`${id}-${field.id}-${option.value}`"
-            :id="`${id}-${field.id}-${option.value}`"
-            :name="field.id"
+            :ref="`${id}-${field.fieldKey}-${option.value}`"
+            :id="`${id}-${field.fieldKey}-${option.value}`"
+            :name="field.fieldKey"
             :value="option.value"
-            @change="selectCheckbox()"
+            @change="v => selectCheckbox(v.target.value,v.target.checked)"
           />
-          <label :for="`${id}-${field.id}-${option.value}`">{{option.label}}</label>
+          <label :for="`${id}-${field.fieldKey}-${option.value}`">{{option.label}}</label>
           <div v-if="option.fields">
             <Field
               v-for="(theField, index) in option.fields"
               :key="index"
               :field="theField"
               :disabled="value.filter(op => op == option.value).length == 0"
+              :father="value.filter(op => op == option.value)[0]"
               @value="concat"
-              @addValue="addValue"
             />
           </div>
         </div>
@@ -78,8 +77,8 @@
         <input
           :disabled="disabled"
           type="file"
-          :name="field.id"
-          :accept="field.attributes.accept"
+          :name="field.fieldKey"
+          :accept="field.attributes.accept ? field.attributes.accept : 'all'"
           :multiple="field.attributes.multiple"
         />
       </div>
@@ -99,7 +98,6 @@
           :key="index"
           :field="theField"
           @value="concat"
-          @addValue="addValue"
         />
       </div>
       <div v-else-if="field.type == 'question'">
@@ -108,15 +106,15 @@
             v-model="value"
             :disabled="disabled"
             type="radio"
-            :ref="`${id}-${field.id}-${option.value}`"
-            :id="`${id}-${field.id}-${option.value}`"
-            :name="field.id"
+            :ref="`${id}-${field.fieldKey}-${option.value}`"
+            :id="`${id}-${field.fieldKey}-${option.value}`"
+            :name="field.fieldKey"
             :value="option.value"
             @change="select()"
           />
-          <label :for="`${id}-${field.id}-${option.value}`">{{option.label}}</label>
+          <label :for="`${id}-${field.fieldKey}-${option.value}`">{{option.label}}</label>
         </div>
-        <div v-for="(option, index) in field.options" :key="`${id}-${field.id}-${index}`">
+        <div v-for="(option, index) in field.options" :key="`${id}-${field.fieldKey}-${index}`">
           <div v-if="value == option.value">
             <Field
               v-for="(theField, index) in option.fields"
@@ -124,7 +122,6 @@
               :field="theField"
               :disabled="value != option.value"
               @value="concat"
-              @addValue="addValue"
             />
           </div>
         </div>
@@ -135,7 +132,6 @@
           :key="index"
           :field="theField"
           @value="concat"
-          @addValue="addValue"
         />
       </div>
     </div>
@@ -153,87 +149,106 @@ export default {
     show: {
       type: Boolean,
       default: true
-    }
+    },
+    father: undefined
   },
   data() {
     return {
       value: null,
-      id: null
+      id: null,
+      arrayValue: []
     };
   },
   methods: {
     select() {
-      console.log({
-        data: {
-          fieldId: this.field.id,
-          value: this.value
-        }
-      });
-      // this.$emit("value", {
-      //   data: {
-      //     fieldId: this.field.id,
-      //     value: this.value
-      //   }
-      // });
+      this.$emit(
+        "value",
+        JSON.parse(
+          `{ "${this.field.fieldKey}": { "value": "${this.value}" } }`
+        ),
+        this.father
+      );
     },
-    selectCheckbox(option) {
-      // let values = []
-      // this.value.forEach(v => {
-      //   values.push({
-      //     value: v
-      //   })
-      // });
-      console.log(this.value)
-      // console.log({
-      //   data: {
-      //     fieldId: this.field.id,
-      //     value: values
-      //   }
-      // });
-      // this.$emit("addValue", {
-      //   data: {
-      //     fieldId: this.field.id,
-      //     value: values
-      //   }
-      // });
+    selectCheckbox(option, value) {
+      if (value) {
+        this.arrayValue.push({
+          value: option
+        })
+      }
+      else {
+        this.arrayValue = this.arrayValue.filter(ar => ar.value != option);
+      }
+      this.$emit(
+        "value",
+        JSON.parse(
+          `{ "${this.field.fieldKey}": { "value": ${JSON.stringify(
+            this.arrayValue
+          )} } }`
+        ),
+        this.father
+      );
     },
-    addValue(value) {
-      console.log({
-        data: {
-          fieldId: this.field.id,
-          value: this.value,
-          data: value.data
+    concat(value, father) {
+      if (Array.isArray(this.value)) {
+        if (father) {
+          if (this.arrayValue.filter(va => va.value == father).length == 0) {
+            this.arrayValue.push({
+              value: father,
+              data: value
+            });
+          } else {
+            this.arrayValue.forEach((va, i) => {
+              if (va.value == father) {
+                this.arrayValue[i] = {
+                  value: father,
+                  data: value
+                };
+              }
+            });
+          }
+          this.$emit(
+            "value",
+            JSON.parse(`{
+            "${this.field.fieldKey}": {
+              "value": ${JSON.stringify(this.arrayValue)}
+            }
+          }`)
+          );
+        } else {          
+          if (this.arrayValue.filter(va => va.value == value).length == 0) {
+            this.arrayValue.push({
+              value: value
+            });
+          } else {
+            this.arrayValue.forEach((va, i) => {
+              if (va.value == value) {
+                this.arrayValue[i] = {
+                  value: value
+                };
+              }
+            });
+          }
+          this.$emit(
+            "value",
+            JSON.parse(`{
+          "${this.field.fieldKey}": {
+            "value": "${this.value}",
+            "data": ${JSON.stringify(this.arrayValue)}
+          }
+        }`)
+          );
         }
-      });
-      this.$emit("value", {
-        data: {
-          fieldId: this.field.id,
-          value: this.value,
-          data: value.data
-        }
-      });
-    },
-    concat(value) {
-      console.log({
-        data: {
-          fieldId: this.field.id,
-          value: this.value,
-          data: value.data
-        }
-      });
-      this.$emit("value", {
-        data: {
-          fieldId: this.field.id,
-          value: this.value,
-          data: value.data
-        }
-      });
-      // let response = JSON.parse(
-      //   `{"${this.field.id}": { "value": "${this.value}"}}`
-      // );
-      // response[this.field.id][Object.keys(value)] = value[Object.keys(value)];
-      // console.log(response);
-      // console.log(value);
+      } else {
+        this.$emit(
+          "value",
+          JSON.parse(`{
+          "${this.field.fieldKey}": {
+            "value": "${this.value}",
+            "data": ${JSON.stringify(value)}
+          }
+        }`)
+        );
+      }
     }
   },
   mounted() {

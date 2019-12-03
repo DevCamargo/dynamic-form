@@ -1,5 +1,11 @@
 # dynamic-form
 
+## NVM
+
+```
+nvm use lts/dubnium
+```
+
 ## Project setup
 ```
 npm install
