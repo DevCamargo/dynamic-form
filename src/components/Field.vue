@@ -163,9 +163,7 @@ export default {
     select() {
       this.$emit(
         "value",
-        JSON.parse(
-          `{ "${this.field.key}": { "value": "${this.value}" } }`
-        ),
+        JSON.parse(`{ "${this.field.key}": { "value": "${this.value}" } }`),
         this.father
       );
     },
@@ -173,9 +171,8 @@ export default {
       if (value) {
         this.arrayValue.push({
           value: option
-        })
-      }
-      else {
+        });
+      } else {
         this.arrayValue = this.arrayValue.filter(ar => ar.value != option);
       }
       this.$emit(
@@ -189,8 +186,6 @@ export default {
       );
     },
     concat(value, father) {
-      console.log(this.value, value);
-      
       if (Array.isArray(this.value)) {
         if (father) {
           if (this.arrayValue.filter(va => va.value == father).length == 0) {
@@ -216,7 +211,7 @@ export default {
             }
           }`)
           );
-        } else {          
+        } else {
           if (this.arrayValue.filter(va => va.value == value).length == 0) {
             this.arrayValue.push({
               value: value
@@ -241,13 +236,6 @@ export default {
           );
         }
       } else {
-        // console.log(JSON.parse(`{
-        //   "${this.field.key}": {
-        //     "value": "${this.value}",
-        //     "data": ${JSON.stringify(value)}
-        //   }
-        // }`));
-        
         this.$emit(
           "value",
           JSON.parse(`{
@@ -268,8 +256,8 @@ export default {
       this.value = [];
     }
     if (this.field.value) {
-      this.value = this.field.value
-      this.select()
+      this.value = this.field.value;
+      this.select();
     }
   }
 };
