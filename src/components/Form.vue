@@ -3,7 +3,7 @@
     <div class="form-name">{{form.label}}</div>
     <div class="section" v-for="(section, index) in form.sections" :key="index">
       <div class="section-name">{{section.label}}</div>
-      <Field v-for="(field, index) in section.fields" :key="index" :field="field" @value="v => value(v, field.fieldKey, section.sectionKey)" />
+      <Field v-for="(field, index) in section.fields" :key="index" :field="field" @value="v => value(v, field.key, section.key)" />
     </div>
     <button @click="$emit('send')">Send info (view console)</button>
   </div>
@@ -21,8 +21,8 @@ export default {
   },
   methods: {
     value(value, field, section) {
+      console.log(value);
       this.$emit('value', value, field, section)
-      // console.log();
     }
   }
 };

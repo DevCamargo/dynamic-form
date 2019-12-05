@@ -16,18 +16,18 @@ export default {
   },
   methods: {
     send() {
-      // console.log(JSON.stringify(this.json));
+      console.log(JSON.stringify(this.json));
       this.form.sections.forEach(section => {
         console.log(`\n${section.label}`)
         section.fields.forEach(field => {
-          this.viewFields(field, this.json.sections[section.sectionKey].fields, '')
+          this.viewFields(field, this.json[section.key], '')
         });
       });
     },
     viewFields(field, fieldsValue, tab) {
-      if (Array.isArray(fieldsValue[field.fieldKey].value)) {
+      if (Array.isArray(fieldsValue[field.key].value)) {
         console.log(`${tab}${field.label}`)
-        fieldsValue[field.fieldKey].value.forEach(v => {
+        fieldsValue[field.key].value.forEach(v => {
           console.log(`\t${tab}${v.value}`)
           field.options.forEach(op => {
             if (v.value == op.value) {
@@ -41,40 +41,35 @@ export default {
         });
       }
       else {
-        console.log(`${tab}${field.label} ${fieldsValue[field.fieldKey].value}`)
+        console.log(`${tab}${field.label} ${fieldsValue[field.key].value}`)
       }
-      if (fieldsValue[field.fieldKey].data) {
+      if (fieldsValue[field.key].data) {
         field.options.forEach(op => {
           if (op.fields) {
             op.fields.forEach(f => {
-              this.viewFields(f, fieldsValue[field.fieldKey].data, tab + '\t')
+              this.viewFields(f, fieldsValue[field.key].data, tab + '\t')
             });
           }
         })
       }
     },
     view(value, field, section) {
-      // console.log(this.json, value);
-      this.json.sections[section].fields[field] = {
+      value[field].data ? this.json[section][field] = {
+        value: value[field].value,
+        data: value[field].data
+      } : this.json[section][field] = {
         value: value[field].value
       }
-      // if (this.json) {
-        
-      // }
-      // console.log(value, field, section);
-      // console.log(this.json);
     },
     startJson() {
       this.json = {
         sections: {}
       }
       this.form.sections.forEach(s => {
-        this.json.sections[s.sectionKey] = {
-          fields: {}
-        }
+        this.json[s.key] = {}
         if (s.fields) {
           s.fields.forEach(f => {
-            this.json.sections[s.sectionKey].fields[f.fieldKey] = {}
+            this.json[s.key][f.key] = {}
           })
         }
       })
@@ -87,31 +82,31 @@ export default {
         label: "Application for San Diego State University",
         sections: [
           {
-            sectionKey: "personal_information",
+            key: "personal_information",
             label: "PERSONAL INFORMATION",
             fields: [
               {
-                fieldKey: "name",
+                key: "name",
                 label: "Name:",
                 type: "input"
               },
               {
-                fieldKey: "city",
+                key: "city",
                 label: "City:",
                 type: "input"
               },
               {
-                fieldKey: "state",
+                key: "state",
                 label: "State:",
                 type: "input"
               },
               {
-                fieldKey: "zipCode",
+                key: "zipCode",
                 label: "Zip code:",
                 type: "input"
               },
               {
-                fieldKey: "gender",
+                key: "gender",
                 label: "Gender:",
                 type: "select",
                 options: [
@@ -126,7 +121,7 @@ export default {
                 ]
               },
               {
-                fieldKey: "visa",
+                key: "visa",
                 label:
                   "Do you have a non-immigrant visa to the U.S. currently?",
                 type: "radio",
@@ -136,7 +131,7 @@ export default {
                     label: "Yes",
                     fields: [
                       {
-                        fieldKey: "type",
+                        key: "type",
                         label: "Type:",
                         type: "select",
                         options: [
@@ -162,10 +157,10 @@ export default {
           },
           {
             label: "EDUCATIONAL INFORMATION",
-            sectionKey: "educational_information",
+            key: "educational_information",
             fields: [
               {
-                fieldKey: "term",
+                key: "term",
                 label: "Term you expect to enter San Diego State University",
                 type: "checkbox",
                 options: [
@@ -174,7 +169,7 @@ export default {
                     label: "Summer (May through August)",
                     fields: [
                       {
-                        fieldKey: "season",
+                        key: "season",
                         label: "Season:",
                         type: "select",
                         options: [
@@ -195,7 +190,7 @@ export default {
                     label: "Fall (August through December)",
                     fields: [
                       {
-                        fieldKey: "season",
+                        key: "season",
                         label: "Season:",
                         type: "select",
                         options: [
@@ -214,7 +209,7 @@ export default {
                 ]
               },
               {
-                fieldKey: "course",
+                key: "course",
                 label: "Type of course:",
                 type: "checkbox",
                 options: [
@@ -231,7 +226,7 @@ export default {
                     label: "Graduate Student",
                     fields: [
                       {
-                        fieldKey: "certified",
+                        key: "certified",
                         label: "Attach Certified",
                         type: "file",
                         attributes: {
@@ -243,7 +238,7 @@ export default {
                 ]
               },
               {
-                fieldKey: "learn",
+                key: "learn",
                 label:
                   "Please tell us how you first learned about San Diego State University:",
                 type: "textarea"
@@ -252,10 +247,10 @@ export default {
           },
           {
             label: "DEPENDENT INFORMATION FORM",
-            sectionKey: "dependent_information",
+            key: "dependent_information",
             fields: [
               {
-                fieldKey: "dependentForm",
+                key: "dependentForm",
                 label: "Will you be accompanied by your spouse?",
                 type: "question",
                 options: [
@@ -264,12 +259,12 @@ export default {
                     label: "Yes",
                     fields: [
                       {
-                        fieldKey: "name",
+                        key: "name",
                         label: "Name:",
                         type: "input"
                       },
                       {
-                        fieldKey: "course",
+                        key: "course",
                         label: "Type of course",
                         type: "checkbox",
                         options: [

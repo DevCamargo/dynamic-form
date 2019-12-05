@@ -30,13 +30,13 @@
             v-model="value"
             :disabled="disabled"
             type="radio"
-            :ref="`${id}-${field.fieldKey}-${option.value}`"
-            :id="`${id}-${field.fieldKey}-${option.value}`"
-            :name="field.fieldKey"
+            :ref="`${id}-${field.key}-${option.value}`"
+            :id="`${id}-${field.key}-${option.value}`"
+            :name="field.key"
             :value="option.value"
             @change="select()"
           />
-          <label :for="`${id}-${field.fieldKey}-${option.value}`">{{option.label}}</label>
+          <label :for="`${id}-${field.key}-${option.value}`">{{option.label}}</label>
           <div v-if="option.fields">
             <Field
               v-for="(theField, index) in option.fields"
@@ -54,13 +54,13 @@
             v-model="value"
             :disabled="disabled"
             type="checkbox"
-            :ref="`${id}-${field.fieldKey}-${option.value}`"
-            :id="`${id}-${field.fieldKey}-${option.value}`"
-            :name="field.fieldKey"
+            :ref="`${id}-${field.key}-${option.value}`"
+            :id="`${id}-${field.key}-${option.value}`"
+            :name="field.key"
             :value="option.value"
             @change="v => selectCheckbox(v.target.value,v.target.checked)"
           />
-          <label :for="`${id}-${field.fieldKey}-${option.value}`">{{option.label}}</label>
+          <label :for="`${id}-${field.key}-${option.value}`">{{option.label}}</label>
           <div v-if="option.fields">
             <Field
               v-for="(theField, index) in option.fields"
@@ -77,7 +77,7 @@
         <input
           :disabled="disabled"
           type="file"
-          :name="field.fieldKey"
+          :name="field.key"
           :accept="field.attributes.accept ? field.attributes.accept : 'all'"
           :multiple="field.attributes.multiple"
         />
@@ -106,15 +106,15 @@
             v-model="value"
             :disabled="disabled"
             type="radio"
-            :ref="`${id}-${field.fieldKey}-${option.value}`"
-            :id="`${id}-${field.fieldKey}-${option.value}`"
-            :name="field.fieldKey"
+            :ref="`${id}-${field.key}-${option.value}`"
+            :id="`${id}-${field.key}-${option.value}`"
+            :name="field.key"
             :value="option.value"
             @change="select()"
           />
-          <label :for="`${id}-${field.fieldKey}-${option.value}`">{{option.label}}</label>
+          <label :for="`${id}-${field.key}-${option.value}`">{{option.label}}</label>
         </div>
-        <div v-for="(option, index) in field.options" :key="`${id}-${field.fieldKey}-${index}`">
+        <div v-for="(option, index) in field.options" :key="`${id}-${field.key}-${index}`">
           <div v-if="value == option.value">
             <Field
               v-for="(theField, index) in option.fields"
@@ -164,7 +164,7 @@ export default {
       this.$emit(
         "value",
         JSON.parse(
-          `{ "${this.field.fieldKey}": { "value": "${this.value}" } }`
+          `{ "${this.field.key}": { "value": "${this.value}" } }`
         ),
         this.father
       );
@@ -181,7 +181,7 @@ export default {
       this.$emit(
         "value",
         JSON.parse(
-          `{ "${this.field.fieldKey}": { "value": ${JSON.stringify(
+          `{ "${this.field.key}": { "value": ${JSON.stringify(
             this.arrayValue
           )} } }`
         ),
@@ -189,6 +189,8 @@ export default {
       );
     },
     concat(value, father) {
+      console.log(this.value, value);
+      
       if (Array.isArray(this.value)) {
         if (father) {
           if (this.arrayValue.filter(va => va.value == father).length == 0) {
@@ -209,7 +211,7 @@ export default {
           this.$emit(
             "value",
             JSON.parse(`{
-            "${this.field.fieldKey}": {
+            "${this.field.key}": {
               "value": ${JSON.stringify(this.arrayValue)}
             }
           }`)
@@ -231,7 +233,7 @@ export default {
           this.$emit(
             "value",
             JSON.parse(`{
-          "${this.field.fieldKey}": {
+          "${this.field.key}": {
             "value": "${this.value}",
             "data": ${JSON.stringify(this.arrayValue)}
           }
@@ -239,10 +241,17 @@ export default {
           );
         }
       } else {
+        // console.log(JSON.parse(`{
+        //   "${this.field.key}": {
+        //     "value": "${this.value}",
+        //     "data": ${JSON.stringify(value)}
+        //   }
+        // }`));
+        
         this.$emit(
           "value",
           JSON.parse(`{
-          "${this.field.fieldKey}": {
+          "${this.field.key}": {
             "value": "${this.value}",
             "data": ${JSON.stringify(value)}
           }
@@ -255,8 +264,12 @@ export default {
     this.id = this._uid;
   },
   created() {
-    if (this.field.type == "radio" || this.field.type == "checkbox") {
+    if (this.field.type == "checkbox") {
       this.value = [];
+    }
+    if (this.field.value) {
+      this.value = this.field.value
+      this.select()
     }
   }
 };
